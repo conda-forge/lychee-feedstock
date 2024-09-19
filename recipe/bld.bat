@@ -4,8 +4,6 @@ set OPENSSL_NO_VENDOR=1
 set CARGO_PROFILE_RELEASE_STRIP=debuginfo
 set "OPENSSL_DIR=%LIBRARY_PREFIX%"
 
-cd lychee-bin
-
 cargo install ^
     --bins ^
     --locked ^

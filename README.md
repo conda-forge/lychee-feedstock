@@ -206,4 +206,5 @@ Feedstock Maintainers
 =====================
 
 * [@danielnachun](https://github.com/danielnachun/)
+* [@egpbos](https://github.com/egpbos/)
 

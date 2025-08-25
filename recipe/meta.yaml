@@ -1,4 +1,4 @@
-{% set version = "0.19.1" %}
+{% set version = "0.20.1" %}
 
 package:
   name: lychee
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/lycheeverse/lychee/archive/refs/tags/lychee-v{{ version }}.tar.gz
-  sha256: 20870738b8a1ccd4658327351682382a177234014ea5e24e9f932f905b2f7d35
+  sha256: d030de91cf5cd96924987461911aa04e78404f6372e0734e20a5c31e2df4608a
 
 build:
   number: 0
@@ -27,7 +27,7 @@ test:
   commands:
     - lychee --version
     - lychee --help
-    - lychee --version | grep -iE "{{ version.replace('.', '\.') }}"
+    - lychee --version | grep -iE {{ version.replace('.', '\.') }}
 
 about:
   home: https://lychee.cli.rs

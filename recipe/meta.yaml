@@ -1,4 +1,4 @@
-{% set version = "0.21.0" %}
+{% set version = "0.22.0" %}
 
 package:
   name: lychee
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/lycheeverse/lychee/archive/refs/tags/lychee-v{{ version }}.tar.gz
-  sha256: 15a5f4d1a3c8f8819cc1772c4b703d081dbb4dd57dea9e6fa60e25de8add15d6
+  sha256: ea1e0574f76c0541b014eab3fc32bf0bdda845a0e917175a5013f7920bea67e1
 
 build:
   number: 0

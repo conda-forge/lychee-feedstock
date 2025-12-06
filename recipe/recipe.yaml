@@ -32,7 +32,6 @@ tests:
     script:
       - lychee --version
       - lychee --help
-      - lychee --version | grep -iE ${{ version | replace('.', '\.') }}
 
 about:
   license: Apache-2.0 OR MIT

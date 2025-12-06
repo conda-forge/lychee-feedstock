@@ -1,7 +1,8 @@
 @echo on
 
+set CARGO_PROFILE_RELEASE_STRIP=symbols
+set CARGO_PROFILE_RELEASE_LTO=fat
 set OPENSSL_NO_VENDOR=1
-set CARGO_PROFILE_RELEASE_STRIP=debuginfo
 set "OPENSSL_DIR=%LIBRARY_PREFIX%"
 
 cargo install ^

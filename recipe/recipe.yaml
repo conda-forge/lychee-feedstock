@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.23.0"
+  version: "0.24.0"
 
 package:
   name: lychee
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/lycheeverse/lychee/archive/refs/tags/lychee-v${{ version }}.tar.gz
-  sha256: 0c2c7387f5c8916c8c35ffd6102507663de8645da78579231a403020c34db67b
+  sha256: e1a92b9660140f53bdeea26815775c465640b0c09649b1b395f7fd471b057856
 
 build:
   number: 0

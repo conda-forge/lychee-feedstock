@@ -65,7 +65,7 @@ tests:
   - script:
       - lychee --help
       - lychee --version
-      - lychee --version | ${{ 'grep -iE ' if unix else 'findsr /r /c:' }}${{ version | replace('.', '\\.') }}
+      - lychee --version | ${{ 'grep -iE ' if unix else 'findstr /r /c:' }}${{ version | replace('.', '\\.') }}
 
 
 about:

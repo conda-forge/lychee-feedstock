@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 schema_version: 1
 
 context:
@@ -18,11 +19,26 @@ build:
     env:
       CARGO_PROFILE_RELEASE_LTO: fat
       CARGO_PROFILE_RELEASE_STRIP: symbols
-      OPENSSL_DIR: ${{ '${PREFIX}' if unix else '%LIBRARY_PREFIX%' }}
-      OPENSSL_NO_VENDOR: "1"
     content:
       - cargo auditable install --bins --locked --no-track --profile=release --path=lychee-bin --root="${{ '${PREFIX}' if unix else '%LIBRARY_PREFIX%' }}"
       - cargo-bundle-licenses --format=yaml --output=THIRDPARTY.yml
+      - if: build_platform == target_platform
+        then:
+          - if: unix
+            then:
+              - mkdir -p "${PREFIX}/share/bash-completion/completions" "${PREFIX}/share/elvish/lib" "${PREFIX}/share/fish/vendor_completions.d" "${PREFIX}/share/powershell/completions" "${PREFIX}/share/zsh/site-functions"
+              - lychee --generate complete-bash       > "${PREFIX}/share/bash-completion/completions/lychee"
+              - lychee --generate complete-elvish     > "${PREFIX}/share/elvish/lib/lychee.elv"
+              - lychee --generate complete-fish       > "${PREFIX}/share/fish/vendor_completions.d/lychee.fish"
+              - lychee --generate complete-powershell > "${PREFIX}/share/powershell/completions/lychee.ps1"
+              - lychee --generate complete-zsh        > "${PREFIX}/share/zsh/site-functions/_lychee"
+            else:
+              - md "%LIBRARY_PREFIX%\share\bash-completion\completions" "%LIBRARY_PREFIX%\share\elvish\lib" "%LIBRARY_PREFIX%\share\fish\vendor_completions.d" "%LIBRARY_PREFIX%\share\powershell\completions" "%LIBRARY_PREFIX%\share\zsh\site-functions"
+              - lychee --generate complete-bash       > "%LIBRARY_PREFIX%\share\bash-completion\completions\lychee"
+              - lychee --generate complete-elvish     > "%LIBRARY_PREFIX%\share\elvish\lib\lychee.elv"
+              - lychee --generate complete-fish       > "%LIBRARY_PREFIX%\share\fish\vendor_completions.d\lychee.fish"
+              - lychee --generate complete-powershell > "%LIBRARY_PREFIX%\share\powershell\completions\lychee.ps1"
+              - lychee --generate complete-zsh        > "%LIBRARY_PREFIX%\share\zsh\site-functions\_lychee"
 
 requirements:
   build:
@@ -32,18 +48,25 @@ requirements:
     - cargo-auditable
     - cargo-bundle-licenses
     - pkg-config
-  host:
-    - openssl
 
 tests:
   - package_contents:
       strict: true
       bin:
         - lychee
+      files:
+        - if: build_platform == target_platform
+          then:
+            - ${{ 'Library/' if win }}share/bash-completion/completions/lychee
+            - ${{ 'Library/' if win }}share/elvish/lib/lychee.elv
+            - ${{ 'Library/' if win }}share/fish/vendor_completions.d/lychee.fish
+            - ${{ 'Library/' if win }}share/powershell/completions/lychee.ps1
+            - ${{ 'Library/' if win }}share/zsh/site-functions/_lychee
   - script:
       - lychee --help
       - lychee --version
       - lychee --version | ${{ 'grep -iE ' if unix else 'findsr /r /c:' }}${{ version | replace('.', '\\.') }}
+
 
 about:
   license: Apache-2.0 OR MIT

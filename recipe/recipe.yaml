@@ -12,27 +12,38 @@ source:
   sha256: 62687c0a84ceec76d17e30e494dcf8e65c7099a2e24a6a521a41854b8eb3759d
 
 build:
-  number: 0
+  number: 1
   skip: ppc64le
+  script:
+    env:
+      CARGO_PROFILE_RELEASE_LTO: fat
+      CARGO_PROFILE_RELEASE_STRIP: symbols
+      OPENSSL_DIR: ${{ '${PREFIX}' if unix else '%LIBRARY_PREFIX%' }}
+      OPENSSL_NO_VENDOR: "1"
+    content:
+      - cargo auditable install --bins --locked --no-track --profile=release --path=lychee-bin --root="${{ '${PREFIX}' if unix else '%LIBRARY_PREFIX%' }}"
+      - cargo-bundle-licenses --format=yaml --output=THIRDPARTY.yml
 
 requirements:
   build:
     - ${{ compiler('rust') }}
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
+    - cargo-auditable
     - cargo-bundle-licenses
     - pkg-config
   host:
     - openssl
 
 tests:
-  - requirements:
-      run:
-        - if: win
-          then: m2-grep
-    script:
-      - lychee --version
+  - package_contents:
+      strict: true
+      bin:
+        - lychee
+  - script:
       - lychee --help
+      - lychee --version
+      - lychee --version | ${{ 'grep -iE ' if unix else 'findsr /r /c:' }}${{ version | replace('.', '\\.') }}
 
 about:
   license: Apache-2.0 OR MIT
@@ -44,7 +55,6 @@ about:
   description: |
     Finds broken URLs and mail addresses inside Markdown, HTML,
     reStructuredText, websites and more!
-
 
   homepage: https://lychee.cli.rs
   repository: https://github.com/lycheeverse/lychee
